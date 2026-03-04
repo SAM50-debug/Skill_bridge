@@ -1,0 +1,26 @@
+<h1>{{ op.title }}</h1>
+
+<p><b>Company:</b> {{ op.company_name }}</p>
+<p><b>Location:</b> {{ op.location }}</p>
+<p><b>Deadline:</b> {{ op.deadline }}</p>
+
+{% if op.company_logo %}
+  <img src="{{ op.company_logo.url }}" width="120" />
+{% endif %}
+
+<hr>
+
+<p>{{ op.description }}</p>
+
+{% if op.attachment %}
+  <p><a href="{{ op.attachment.url }}">Download Attachment</a></p>
+{% endif %}
+
+{% if expired %}
+  <p><b>Expired</b></p>
+{% else %}
+  <p><a href="{{ op.apply_link }}" target="_blank">Apply Now</a></p>
+{% endif %}
+
+<hr>
+<p><a href="/interest/">Back</a></p>

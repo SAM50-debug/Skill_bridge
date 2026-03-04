@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+    <title>Select Interest - SkillBridge</title>
+</head>
+
+<body>
+
+<h1>Are you interested in?</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <button type="submit" name="interest" value="job">
+        Job
+    </button>
+
+    <button type="submit" name="interest" value="internship">
+        Internship
+    </button>
+
+</form>
+
+<br>
+
+<a href="/logout/">Logout</a>
+
+</body>
+</html>

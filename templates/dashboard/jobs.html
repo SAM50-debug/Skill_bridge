@@ -1,0 +1,18 @@
+<h1>Job Dashboard</h1>
+
+{% if items %}
+  <ul>
+    {% for op in items %}
+      <li>
+        <b>{{ op.title }}</b> — {{ op.company_name }} ({{ op.location }})
+        <br>
+        Deadline: {{ op.deadline }}
+        <br>
+        <a href="/opportunity/{{ op.id }}/">View</a>
+      </li>
+      <hr>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No jobs yet. Admin will upload opportunities.</p>
+{% endif %}
