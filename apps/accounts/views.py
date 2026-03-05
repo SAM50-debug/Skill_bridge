@@ -5,7 +5,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 
 from .forms import EmailLoginForm, SignUpForm
-from .models import EmailVerificationToken
+from .models import EmailVerificationToken, User
 from .tokens import token_is_expired
 from .utils import send_verification_email
 
@@ -25,7 +25,6 @@ def login_view(request):
         user = form.cleaned_data["user"]
         login(request, user)
 
-        # If interest already chosen, skip interest page
         if user.interest == "job":
             return redirect("/dashboard/jobs/")
         if user.interest == "internship":
@@ -54,11 +53,57 @@ def signup_view(request):
             defaults={"is_used": False},
         )
 
-        send_verification_email(user, token_obj.token)
+        try:
+            send_verification_email(user, token_obj.token)
+        except Exception:
+            # Don't break signup if SMTP is temporarily down
+            messages.warning(
+                request,
+                "Account created, but verification email could not be sent right now. Use 'Resend verification' to try again.",
+            )
 
-        return render(request, "accounts/verify_pending.html", {"email": user.email})
+        login(request, user)
+        messages.success(request, "Account created successfully.")
+        return redirect("interest")
 
     return render(request, "accounts/signup.html", {"form": form})
+
+
+@require_http_methods(["GET", "POST"])
+def resend_verification_view(request):
+    """
+    Public resend endpoint (no login required) to avoid deadlock:
+    user can't login until verified, so resend must not require auth.
+    Security: always returns a generic success message (no user enumeration).
+    """
+    if request.method == "POST":
+        email = (request.POST.get("email") or "").strip()
+
+        try:
+            user = User.objects.get(email__iexact=email)
+
+            if not user.is_verified:
+                token_obj, _ = EmailVerificationToken.objects.update_or_create(
+                    user=user,
+                    defaults={"is_used": False},
+                )
+
+                try:
+                    send_verification_email(user, token_obj.token)
+                except Exception:
+                    # swallow SMTP errors; still show generic message
+                    pass
+
+        except User.DoesNotExist:
+            pass
+
+        messages.success(
+            request,
+            "If the email exists, a verification link has been sent. Please check your inbox/spam.",
+        )
+        return redirect("resend_verification")
+
+    return render(request, "accounts/resend_verification.html")
 
 
 def logout_view(request):
@@ -98,12 +143,11 @@ def verify_email(request, token):
 
     if token_is_expired(verification):
         messages.error(request, "Verification link expired. Please request a new one.")
-        return redirect("login")  # we'll add resend page next
+        return redirect("resend_verification")
 
     user = verification.user
-    user.is_active = True
     user.is_verified = True
-    user.save()
+    user.save(update_fields=["is_verified"])
 
     verification.is_used = True
     verification.save()

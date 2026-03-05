@@ -1,29 +1,55 @@
-<!doctype html>
-<html>
-<head>
-    <title>Select Interest - SkillBridge</title>
-</head>
+{% extends 'base.html' %}
 
-<body>
+{% block title %}Select Interest - SkillBridge{% endblock %}
 
-<h1>Are you interested in?</h1>
+{% block content %}
+<div class="sb-card transform transition-all animate-[fadeIn_0.5s_ease-out] w-full max-w-2xl mx-auto">
+    <div class="text-center mb-10">
+        <h1 class="text-3xl font-bold text-white tracking-tight mb-2">What are you looking for?</h1>
+        <p class="text-white/70 text-sm">Select your primary interest to personalize your experience</p>
+    </div>
 
-<form method="post">
-    {% csrf_token %}
+    <form method="post">
+        {% csrf_token %}
 
-    <button type="submit" name="interest" value="job">
-        Job
-    </button>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Job Option -->
+            <button type="submit" name="interest" value="job" 
+                class="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 text-left transition-all hover:scale-[1.02] hover:border-cyan-500/50 hover:bg-cyan-500/10 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                <div class="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-cyan-500/20 blur-2xl group-hover:bg-cyan-500/30 transition-all"></div>
+                <div class="mb-4 inline-flex items-center justify-center rounded-xl bg-cyan-500/20 p-3 text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+                    <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <h3 class="mb-2 text-xl font-bold text-white">Full-time Job</h3>
+                <p class="text-sm text-white/60">Explore full-time job opportunities and career advancements.</p>
+            </button>
 
-    <button type="submit" name="interest" value="internship">
-        Internship
-    </button>
+            <!-- Internship Option -->
+            <button type="submit" name="interest" value="internship" 
+                class="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 text-left transition-all hover:scale-[1.02] hover:border-purple-500/50 hover:bg-purple-500/10 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                <div class="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-purple-500/20 blur-2xl group-hover:bg-purple-500/30 transition-all"></div>
+                <div class="mb-4 inline-flex items-center justify-center rounded-xl bg-purple-500/20 p-3 text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                    <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                <h3 class="mb-2 text-xl font-bold text-white">Internship</h3>
+                <p class="text-sm text-white/60">Discover internship programs, training, and real-world experience.</p>
+            </button>
+        </div>
+    </form>
 
-</form>
+    <div class="mt-8 text-center pt-6 border-t border-white/5">
+        <a href="/logout/" class="sb-link text-sm font-medium text-white/50 hover:text-white/80">Logout securely</a>
+    </div>
+</div>
 
-<br>
-
-<a href="/logout/">Logout</a>
-
-</body>
-</html>
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}

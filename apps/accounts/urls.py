@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import login_view, signup_view, logout_view, interest_view, verify_email
+from .views import login_view, signup_view, logout_view, interest_view, verify_email, resend_verification_view
 
 urlpatterns = [
     path("login/", login_view, name="login"),
@@ -7,4 +7,5 @@ urlpatterns = [
     path("logout/", logout_view, name="logout"),
     path("interest/", interest_view, name="interest"),
     path("verify-email/<uuid:token>/", verify_email, name="verify_email"),
+    path("resend-verification/", resend_verification_view, name="resend_verification"),
 ]

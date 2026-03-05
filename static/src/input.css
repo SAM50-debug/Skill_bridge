@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========
+   BASE LAYER
+   ========= */
+@layer base {
+  :root {
+    --sb-bg: #0f0f1a;
+    --sb-surface: #141428;
+    --sb-card: #1a1a2e;
+    --sb-purple: #b026ff;
+    --sb-cyan: #00f0ff;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-[color:var(--sb-bg)] text-white antialiased;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+  }
+
+  /* Default form controls (works even if templates use {{ form.field }}) */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="date"],
+  input[type="datetime-local"],
+  select,
+  textarea {
+    @apply block w-full bg-[#11111E] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40
+           focus:outline-none focus:ring-2 focus:ring-[color:var(--sb-cyan)] focus:border-transparent
+           transition-all duration-200;
+  }
+
+  label {
+    @apply block text-sm font-medium text-white/70 mb-2;
+  }
+
+  a {
+    @apply text-white/80 hover:text-white transition-colors;
+  }
+}
+
+/* ==============
+   COMPONENTS LAYER
+   ============== */
+@layer components {
+  /* Card */
+  .sb-card {
+    @apply relative overflow-hidden rounded-2xl border border-white/5 bg-[color:var(--sb-card)] p-8
+           shadow-[0_0_24px_rgba(176,38,255,0.08)];
+  }
+
+  /* Gradient top border (avoid @apply in pseudo elements) */
+  .sb-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--sb-purple), var(--sb-cyan));
+  }
+
+  /* Buttons */
+  .sb-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-white
+           bg-gradient-to-r from-[color:var(--sb-purple)] to-[color:var(--sb-cyan)]
+           shadow-[0_0_16px_rgba(0,240,255,0.18)]
+           hover:shadow-[0_0_26px_rgba(176,38,255,0.35)]
+           hover:brightness-110 active:scale-[0.98]
+           focus:outline-none focus:ring-2 focus:ring-[color:var(--sb-cyan)] focus:ring-offset-2 focus:ring-offset-[color:var(--sb-bg)]
+           transition-all duration-200;
+  }
+
+  .sb-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold
+           border border-white/10 bg-white/5 text-white
+           hover:bg-white/10 hover:border-white/15 active:scale-[0.98]
+           focus:outline-none focus:ring-2 focus:ring-[color:var(--sb-purple)] focus:ring-offset-2 focus:ring-offset-[color:var(--sb-bg)]
+           transition-all duration-200;
+  }
+
+  /* Form helpers */
+  .sb-field {
+    @apply space-y-2;
+  }
+
+  .sb-help {
+    @apply text-xs text-white/50;
+  }
+
+  .sb-error {
+    @apply text-xs text-red-400;
+  }
+
+  /* Links */
+  .sb-link {
+    @apply text-[color:var(--sb-cyan)] hover:text-[color:var(--sb-purple)] hover:underline underline-offset-4;
+  }
+
+  /* Badges */
+  .sb-badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold border;
+  }
+
+  .sb-badge-featured {
+    @apply sb-badge border-white/10 bg-purple-500/15 text-purple-200;
+  }
+
+  .sb-badge-expired {
+    @apply sb-badge border-red-500/20 bg-red-500/10 text-red-300;
+  }
+
+  .sb-badge-job {
+    @apply sb-badge border-cyan-500/20 bg-cyan-500/10 text-cyan-200;
+  }
+
+  .sb-badge-internship {
+    @apply sb-badge border-purple-500/20 bg-purple-500/10 text-purple-200;
+  }
+}

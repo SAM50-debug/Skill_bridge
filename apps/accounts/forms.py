@@ -36,7 +36,7 @@ class SignUpForm(UserCreationForm):
         email = self.cleaned_data["email"].lower()
         user.username = email  # keep default auth working
         user.email = email
-        user.is_active = False
+        user.is_active = True
         user.is_verified = False
         if commit:
             user.save()
@@ -59,8 +59,8 @@ class EmailLoginForm(forms.Form):
         if user is None:
             raise ValidationError("Invalid email or password.")
 
-        if not user.is_active or not getattr(user, "is_verified", False):
-            raise ValidationError("Please verify your email before logging in.")
+        if not user.is_active:
+            raise ValidationError("Your account is disabled. Please contact support.")
 
         cleaned["user"] = user
         return cleaned
