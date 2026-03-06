@@ -1,117 +1,149 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}SkillBridge{% endblock %}</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}SkillBridge{% endblock %}</title>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    
-    <!-- Local Tailwind Styles -->
-    <link rel="stylesheet" href="{% static 'dist/styles.css' %}" />
-  </head>
-  <body
-    class="bg-dark text-white font-sans antialiased min-h-screen flex flex-col selection:bg-neon-purple/30 selection:text-white"
-  >
-    <!-- Navbar / Branding -->
-    <nav
-      class="border-b border-white/5 bg-dark/80 backdrop-blur-md sticky top-0 z-40"
-    >
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-          <div class="flex items-center gap-2">
-            <a
-              href="{% if user.is_authenticated %}/dashboard/{% else %}/login/{% endif %}"
-              class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-neon-purple to-neon-cyan hover:opacity-80 transition-opacity"
-            >
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Local Tailwind Styles -->
+  <link rel="stylesheet" href="{% static 'dist/styles.css' %}" />
+</head>
+
+<body class="bg-dark text-white font-sans antialiased min-h-screen flex flex-col selection:bg-neon-purple/30 selection:text-white">
+
+  <!-- Navbar -->
+  <nav class="border-b border-white/5 bg-dark/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+
+        <!-- Logo -->
+        <div class="flex items-center gap-2">
+          {% if user.is_authenticated %}
+            <a href="{% url 'dashboard_home' %}"
+               class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-neon-purple to-neon-cyan hover:opacity-80 transition-opacity">
               SkillBridge
             </a>
-          </div>
+          {% else %}
+            <a href="{% url 'login' %}"
+               class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-neon-purple to-neon-cyan hover:opacity-80 transition-opacity">
+              SkillBridge
+            </a>
+          {% endif %}
+        </div>
 
-          <div class="flex items-center gap-4">
-            {% if user.is_authenticated %}
-              <a href="/dashboard/" class="text-gray-300 hover:text-white transition font-medium text-sm">Dashboard</a>
+        <!-- Right Navigation -->
+        <div class="flex items-center gap-2">
+
+          {% if user.is_authenticated %}
+
+            <div class="flex items-center gap-1 rounded-2xl border border-white/10 bg-white/5 px-1 py-1">
+              <a href="{% url 'dashboard_home' %}"
+                 class="px-4 py-2 rounded-xl text-sm font-medium transition-all {% if request.path == '/dashboard/' %}bg-white/10 text-white shadow-sm{% else %}text-white/70 hover:text-white hover:bg-white/5{% endif %}">
+                Dashboard
+              </a>
+
+              {% if user.interest == "job" %}
+                <a href="{% url 'job_dashboard' %}"
+                   class="px-4 py-2 rounded-xl text-sm font-medium transition-all {% if request.path == '/dashboard/jobs/' %}bg-white/10 text-white shadow-sm{% else %}text-white/70 hover:text-white hover:bg-white/5{% endif %}">
+                  Jobs
+                </a>
+              {% elif user.interest == "internship" %}
+                <a href="{% url 'internship_dashboard' %}"
+                   class="px-4 py-2 rounded-xl text-sm font-medium transition-all {% if request.path == '/dashboard/internships/' %}bg-white/10 text-white shadow-sm{% else %}text-white/70 hover:text-white hover:bg-white/5{% endif %}">
+                  Internships
+                </a>
+              {% endif %}
+            </div>
+
+            <div class="ml-2 flex items-center gap-2">
+              <div class="hidden sm:flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2">
+                <div class="w-7 h-7 rounded-xl bg-gradient-to-r from-neon-purple/40 to-neon-cyan/40 border border-white/10 flex items-center justify-center text-xs font-semibold">
+                  {{ user.first_name|default:user.email|slice:":1"|upper }}
+                </div>
+                <span class="text-sm text-white/80 max-w-[180px] truncate">
+                  {{ user.first_name|default:user.email }}
+                </span>
+              </div>
+
               <form method="post" action="{% url 'logout' %}" class="inline-flex m-0 p-0">
                 {% csrf_token %}
-                <button type="submit" class="btn-primary !py-2 !px-4 text-sm">Logout</button>
+                <button type="submit" class="sb-link !text-white/70 hover:!text-white !py-2 !px-3 font-medium text-sm no-underline hover:bg-white/5 rounded-xl transition-all">
+                  Logout
+                </button>
               </form>
-            {% else %}
-              <a href="/login/" class="sb-link font-medium text-sm">Login</a>
-              <a href="/signup/" class="btn-primary !py-2 !px-4 text-sm">Sign up</a>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-    </nav>
+            </div>
 
-    <!-- Message/Toast Area -->
-    <div
-      id="toast-container"
-      class="fixed top-20 right-4 z-50 flex flex-col gap-3 max-w-sm w-full md:w-[350px]"
-    >
-      {% if messages %} {% for message in messages %}
-      <div
-        class="bg-card border-l-4 border-neon-cyan text-white p-4 rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex items-start gap-3 animate-[slideIn_0.3s_ease-out]"
-      >
-        <div class="flex-1">
-          <p class="text-sm font-medium">{{ message }}</p>
+          {% else %}
+
+            <a href="{% url 'login' %}"
+               class="text-white/70 hover:text-white transition font-medium text-sm px-4 py-2 rounded-xl hover:bg-white/5">
+              Login
+            </a>
+
+            <a href="{% url 'signup' %}"
+               class="sb-btn-primary !py-2 !px-5 text-sm !rounded-xl">
+              Sign up
+            </a>
+
+          {% endif %}
+
         </div>
-        <button
-          onclick="this.parentElement.remove()"
-          class="text-gray-400 hover:text-white transition-colors focus:outline-none"
-          aria-label="Close"
-        >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            ></path>
-          </svg>
-        </button>
+
       </div>
-      {% endfor %} {% endif %}
     </div>
+  </nav>
 
-    <!-- Centered Main Container -->
-    <main
-      class="flex-1 flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full"
-    >
-      <!-- Reusable Container that takes up optimal space -->
-      <div class="w-full max-w-md">{% block content %} {% endblock %}</div>
-    </main>
+  <!-- Toast Messages -->
+  <div id="toast-container"
+       class="fixed top-24 right-6 z-50 flex flex-col gap-3 max-w-sm w-full md:w-[350px]">
 
-    <!-- Footer -->
-    <footer class="border-t border-white/5 py-6 mt-auto text-center">
-      <p class="text-sm text-gray-500 font-medium">
-        &copy; {% now "Y" %} SkillBridge. All rights reserved.
-      </p>
-    </footer>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="bg-card border-l-4 border-neon-cyan text-white p-4 rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex items-start gap-3 animate-[slideIn_0.3s_ease-out]">
+          <div class="flex-1">
+            <p class="text-sm font-medium">{{ message }}</p>
+          </div>
 
-    <style>
-      @keyframes slideIn {
-        from {
-          transform: translateX(100%);
-          opacity: 0;
-        }
-        to {
-          transform: translateX(0);
-          opacity: 1;
-        }
-      }
-    </style>
-  </body>
+          <button onclick="this.parentElement.remove()"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  aria-label="Close">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+  </div>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col w-full h-full min-h-[calc(100vh-4rem)] relative">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 py-6 mt-auto text-center">
+    <p class="text-sm text-gray-500 font-medium">
+      &copy; {% now "Y" %} SkillBridge. All rights reserved.
+    </p>
+  </footer>
+
+  <style>
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  </style>
+
+</body>
 </html>
