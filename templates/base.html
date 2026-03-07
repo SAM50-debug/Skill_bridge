@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}SkillBridge{% endblock %}</title>
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -14,18 +13,15 @@
     rel="stylesheet"
   />
 
-  <!-- Local Tailwind Styles -->
   <link rel="stylesheet" href="{% static 'dist/styles.css' %}" />
 </head>
 
 <body class="bg-dark text-white font-sans antialiased min-h-screen flex flex-col selection:bg-neon-purple/30 selection:text-white">
 
-  <!-- Navbar -->
   <nav class="border-b border-white/5 bg-dark/80 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
 
-        <!-- Logo -->
         <div class="flex items-center gap-2">
           {% if user.is_authenticated %}
             <a href="{% url 'dashboard_home' %}"
@@ -40,7 +36,6 @@
           {% endif %}
         </div>
 
-        <!-- Right Navigation -->
         <div class="flex items-center gap-2">
 
           {% if user.is_authenticated %}
@@ -51,15 +46,20 @@
                 Dashboard
               </a>
 
-              {% if user.interest == "job" %}
+              {% if user.preferred_category == "job" or user.interest == "job" %}
                 <a href="{% url 'job_dashboard' %}"
                    class="px-4 py-2 rounded-xl text-sm font-medium transition-all {% if request.path == '/dashboard/jobs/' %}bg-white/10 text-white shadow-sm{% else %}text-white/70 hover:text-white hover:bg-white/5{% endif %}">
                   Jobs
                 </a>
-              {% elif user.interest == "internship" %}
+              {% elif user.preferred_category == "internship" or user.interest == "internship" %}
                 <a href="{% url 'internship_dashboard' %}"
                    class="px-4 py-2 rounded-xl text-sm font-medium transition-all {% if request.path == '/dashboard/internships/' %}bg-white/10 text-white shadow-sm{% else %}text-white/70 hover:text-white hover:bg-white/5{% endif %}">
                   Internships
+                </a>
+              {% elif user.preferred_category == "both" %}
+                <a href="{% url 'dashboard_all' %}"
+                   class="px-4 py-2 rounded-xl text-sm font-medium transition-all {% if request.path == '/dashboard/all/' %}bg-white/10 text-white shadow-sm{% else %}text-white/70 hover:text-white hover:bg-white/5{% endif %}">
+                  All
                 </a>
               {% endif %}
             </div>
@@ -102,7 +102,6 @@
     </div>
   </nav>
 
-  <!-- Toast Messages -->
   <div id="toast-container"
        class="fixed top-24 right-6 z-50 flex flex-col gap-3 max-w-sm w-full md:w-[350px]">
 
@@ -126,13 +125,13 @@
 
   </div>
 
-  <!-- Main Content -->
-  <main class="flex-1 flex flex-col w-full h-full min-h-[calc(100vh-4rem)] relative">
-    {% block content %}{% endblock %}
+  <main class="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6">
+    <div class="max-w-6xl mx-auto w-full">
+      {% block content %}{% endblock %}
+    </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-white/5 py-6 mt-auto text-center">
+  <footer class="border-t border-white/5 py-5 text-center">
     <p class="text-sm text-gray-500 font-medium">
       &copy; {% now "Y" %} SkillBridge. All rights reserved.
     </p>

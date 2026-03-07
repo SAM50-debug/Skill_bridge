@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Signup - Step 4 - SkillBridge{% endblock %}
+
+{% block content %}
+<div class="sb-card !p-6 md:!p-7 w-full max-w-3xl mx-auto my-4 animate-[fadeIn_0.5s_ease-out]">
+
+    <div class="mb-6">
+        <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-semibold text-cyan-400 tracking-wider uppercase">Step 4 of 4</span>
+            <span class="text-xs text-white/50">Preferences</span>
+        </div>
+        <div class="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
+            <div class="bg-gradient-to-r from-neon-purple to-neon-cyan h-1.5 rounded-full" style="width: 100%"></div>
+        </div>
+    </div>
+
+    <div class="text-center mb-7">
+        <h1 class="text-3xl md:text-4xl font-bold text-white tracking-tight mb-2">Preferences and interests</h1>
+        <p class="text-white/60 text-base">Help us personalize opportunities for you.</p>
+    </div>
+
+    <form method="post" class="space-y-5">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="bg-red-500/10 border border-red-500/50 text-red-500 rounded-lg p-3 text-sm">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="sb-field">
+                <label for="{{ form.preferred_category.id_for_label }}">Preferred Category</label>
+                {{ form.preferred_category }}
+                {% if form.preferred_category.errors %}
+                    <p class="sb-error mt-1">{{ form.preferred_category.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <div class="sb-field">
+                <label for="{{ form.preferred_location.id_for_label }}">Preferred Location</label>
+                {{ form.preferred_location }}
+                {% if form.preferred_location.errors %}
+                    <p class="sb-error mt-1">{{ form.preferred_location.errors.0 }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="sb-field">
+            <label for="{{ form.interested_fields.id_for_label }}">Interested Fields</label>
+            {{ form.interested_fields }}
+            {% if form.interested_fields.errors %}
+                <p class="sb-error mt-1">{{ form.interested_fields.errors.0 }}</p>
+            {% endif %}
+            <p class="text-xs text-white/40 mt-1">e.g., Software Engineering, UX Design, Data Science</p>
+        </div>
+
+        <div class="sb-field">
+            <label for="{{ form.skills.id_for_label }}">Skills</label>
+            {{ form.skills }}
+            {% if form.skills.errors %}
+                <p class="sb-error mt-1">{{ form.skills.errors.0 }}</p>
+            {% endif %}
+            <p class="text-xs text-white/40 mt-1">e.g., Python, React, Communication, Leadership</p>
+        </div>
+
+        <div class="mt-4 flex flex-col md:flex-row gap-4 items-center justify-between border-t border-white/5 pt-5">
+            <a href="{% url 'signup_step3' %}" class="w-full md:w-auto text-sm py-3 px-6 rounded-xl font-semibold border border-white/10 text-white/80 hover:text-white hover:bg-white/5 transition-colors text-center inline-flex items-center justify-center">
+                Back
+            </a>
+            <button type="submit" class="sb-btn-primary w-full md:w-auto !py-3 px-8 text-base font-semibold">
+                Create Account
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}

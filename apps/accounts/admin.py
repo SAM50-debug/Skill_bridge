@@ -20,6 +20,11 @@ def export_students_to_excel(modeladmin, request, queryset):
         "college",
         "phone",
         "email",
+        "cgpa",
+        "preferred_category",
+        "interested_fields",
+        "preferred_location",
+        "skills",
         "interest",
         "is_verified",
         "created_at",
@@ -37,6 +42,11 @@ def export_students_to_excel(modeladmin, request, queryset):
             u.college,
             u.phone,
             u.email,
+            str(u.cgpa) if u.cgpa is not None else "",
+            u.preferred_category,
+            u.interested_fields,
+            u.preferred_location,
+            u.skills,
             u.interest or "",
             "yes" if u.is_verified else "no",
             u.created_at.isoformat() if u.created_at else "",
@@ -62,9 +72,27 @@ class UserAdmin(admin.ModelAdmin):
         "college",
         "course",
         "year",
+        "cgpa",
+        "preferred_category",
         "is_verified",
         "interest",
     )
-    search_fields = ("email", "first_name", "last_name", "college", "department")
-    list_filter = ("year", "interest", "is_verified", "department", "college")
+    search_fields = (
+        "email",
+        "first_name",
+        "last_name",
+        "college",
+        "department",
+        "course",
+        "skills",
+    )
+    list_filter = (
+        "year",
+        "interest",
+        "is_verified",
+        "department",
+        "college",
+        "preferred_category",
+        "preferred_location",
+    )
     actions = [export_students_to_excel]

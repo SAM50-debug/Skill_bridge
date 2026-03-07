@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block title %}All Opportunities - SkillBridge{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto py-8 px-4 w-full space-y-10">
+
+    <div class="border-b border-white/10 pb-6">
+        <h1 class="text-4xl font-bold text-white tracking-tight mb-2">All Opportunities</h1>
+        <p class="text-white/60 text-base">Jobs and internships matched to your preferences.</p>
+    </div>
+
+    <section class="space-y-4">
+        <h2 class="text-2xl font-semibold text-white">Jobs</h2>
+        {% if job_items %}
+            <div class="grid grid-cols-1 gap-6">
+                {% for o in job_items %}
+                    <div class="sb-card !p-6">
+                        <div class="flex flex-col md:flex-row gap-6 md:items-start md:justify-between">
+
+                            <!-- Left content -->
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-white mb-2">{{ o.title }}</h3>
+
+                                <div class="flex flex-wrap items-center gap-2 text-sm text-white/70 mb-3">
+                                    <span class="font-medium text-white/90">{{ o.company_name }}</span>
+                                    <span class="text-white/30">•</span>
+                                    <span>{{ o.location }}</span>
+                                </div>
+
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="sb-badge-job">Job</span>
+
+                                    <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-medium text-xs bg-cyan-500/10 text-cyan-200 border border-cyan-500/20">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0"></path>
+                                        </svg>
+                                        Deadline: {{ o.deadline|date:"M d, Y" }}
+                                    </span>
+
+                                    {% if o.minimum_cgpa %}
+                                        <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-medium text-xs bg-purple-500/10 text-purple-200 border border-purple-500/20">
+                                            Min CGPA: {{ o.minimum_cgpa }}
+                                        </span>
+                                    {% endif %}
+                                </div>
+
+                                <p class="text-sm text-white/60 leading-relaxed">
+                                    {{ o.description|truncatechars:180 }}
+                                </p>
+                            </div>
+
+                            <!-- Right actions -->
+                            <div class="flex flex-row md:flex-col items-center justify-end gap-3 md:w-48 border-t md:border-t-0 md:border-l border-white/5 pt-5 md:pt-0 md:pl-6 mt-4 md:mt-0">
+                                {% if o.id in applied_ids %}
+                                    <span class="w-full text-sm py-2.5 px-4 rounded-xl font-semibold border border-green-500/20 bg-green-500/10 text-green-300 text-center inline-flex items-center justify-center">
+                                        Applied
+                                    </span>
+                                {% else %}
+                                    <form method="post" action="{% url 'apply_to_opportunity' o.id %}" class="w-full">
+                                        {% csrf_token %}
+                                        <button type="submit" class="sb-btn-primary w-full text-sm py-2.5 shadow-none">
+                                            Apply Now
+                                        </button>
+                                    </form>
+                                {% endif %}
+
+                                <a href="{% url 'opportunity_detail' o.id %}" class="w-full text-sm py-2.5 px-4 rounded-xl font-semibold border border-white/10 text-white/80 hover:text-white hover:bg-white/5 transition-colors text-center inline-flex items-center justify-center">
+                                    View Details
+                                </a>
+
+                                {% if o.attachment %}
+                                    <a href="{{ o.attachment.url }}" download class="sb-link text-xs flex items-center gap-1 pt-2 md:mt-auto text-white/50 hover:text-white/80">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                        Download Info
+                                    </a>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="sb-card text-white/60">No jobs available right now.</div>
+        {% endif %}
+    </section>
+
+    <section class="space-y-4">
+        <h2 class="text-2xl font-semibold text-white">Internships</h2>
+        {% if internship_items %}
+            <div class="grid grid-cols-1 gap-6">
+                {% for o in internship_items %}
+                    <div class="sb-card !p-6">
+                        <div class="flex flex-col md:flex-row gap-6 md:items-start md:justify-between">
+
+                            <!-- Left content -->
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-white mb-2">{{ o.title }}</h3>
+
+                                <div class="flex flex-wrap items-center gap-2 text-sm text-white/70 mb-3">
+                                    <span class="font-medium text-white/90">{{ o.company_name }}</span>
+                                    <span class="text-white/30">•</span>
+                                    <span>{{ o.location }}</span>
+                                </div>
+
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="sb-badge-internship">Internship</span>
+
+                                    <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-medium text-xs bg-purple-500/10 text-purple-200 border border-purple-500/20">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0"></path>
+                                        </svg>
+                                        Deadline: {{ o.deadline|date:"M d, Y" }}
+                                    </span>
+
+                                    {% if o.minimum_cgpa %}
+                                        <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-medium text-xs bg-cyan-500/10 text-cyan-200 border border-cyan-500/20">
+                                            Min CGPA: {{ o.minimum_cgpa }}
+                                        </span>
+                                    {% endif %}
+                                </div>
+
+                                <p class="text-sm text-white/60 leading-relaxed">
+                                    {{ o.description|truncatechars:180 }}
+                                </p>
+                            </div>
+
+                            <!-- Right actions -->
+                            <div class="flex flex-row md:flex-col items-center justify-end gap-3 md:w-48 border-t md:border-t-0 md:border-l border-white/5 pt-5 md:pt-0 md:pl-6 mt-4 md:mt-0">
+                                {% if o.id in applied_ids %}
+                                    <span class="w-full text-sm py-2.5 px-4 rounded-xl font-semibold border border-green-500/20 bg-green-500/10 text-green-300 text-center inline-flex items-center justify-center">
+                                        Applied
+                                    </span>
+                                {% else %}
+                                    <form method="post" action="{% url 'apply_to_opportunity' o.id %}" class="w-full">
+                                        {% csrf_token %}
+                                        <button type="submit" class="sb-btn-primary w-full text-sm py-2.5 shadow-none">
+                                            Apply Now
+                                        </button>
+                                    </form>
+                                {% endif %}
+
+                                <a href="{% url 'opportunity_detail' o.id %}" class="w-full text-sm py-2.5 px-4 rounded-xl font-semibold border border-white/10 text-white/80 hover:text-white hover:bg-white/5 transition-colors text-center inline-flex items-center justify-center">
+                                    View Details
+                                </a>
+
+                                {% if o.attachment %}
+                                    <a href="{{ o.attachment.url }}" download class="sb-link text-xs flex items-center gap-1 pt-2 md:mt-auto text-white/50 hover:text-white/80">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                        Download Info
+                                    </a>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="sb-card text-white/60">No internships available right now.</div>
+        {% endif %}
+    </section>
+
+</div>
+{% endblock %}

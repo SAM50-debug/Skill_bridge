@@ -1,11 +1,24 @@
 from django.urls import path
-from .views import login_view, signup_view, logout_view, interest_view, verify_email, resend_verification_view
+from .views import (
+    login_view,
+    logout_view,
+    interest_view,
+    signup_step1_view,
+    signup_step2_view,
+    signup_step3_view,
+    signup_step4_view,
+)
 
 urlpatterns = [
     path("login/", login_view, name="login"),
-    path("signup/", signup_view, name="signup"),
     path("logout/", logout_view, name="logout"),
     path("interest/", interest_view, name="interest"),
-    path("verify-email/<uuid:token>/", verify_email, name="verify_email"),
-    path("resend-verification/", resend_verification_view, name="resend_verification"),
+
+    path("signup/step-1/", signup_step1_view, name="signup_step1"),
+    path("signup/step-2/", signup_step2_view, name="signup_step2"),
+    path("signup/step-3/", signup_step3_view, name="signup_step3"),
+    path("signup/step-4/", signup_step4_view, name="signup_step4"),
+
+    # convenience route
+    path("signup/", signup_step1_view, name="signup"),
 ]

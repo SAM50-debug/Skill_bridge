@@ -31,6 +31,7 @@
   input[type="url"],
   input[type="date"],
   input[type="datetime-local"],
+  input[type="number"],
   select,
   textarea {
     @apply block w-full bg-[#11111E] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40
